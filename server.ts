@@ -9,7 +9,7 @@ const dbConfig = {
   host: 'localhost',
   user: 'root',
   password: '123Asd!@#',
-  database: 'salesdb'
+  database: 'sales_db'
 };
 
 app.get('/', async (req:any, res:any) => {
@@ -36,3 +36,4 @@ app.get('/', async (req:any, res:any) => {
 app.listen(PORT, () => {
   console.log(`🌐 Server running at http://localhost:${PORT}`);
 });
+

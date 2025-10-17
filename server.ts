@@ -29,10 +29,11 @@ app.get('/', async (req, res) => {
       <p>${tableList}</p>
     `);
   } catch (err) {
-    res.status(500).send(`<h1>Error fetching tables: ${err.message}</h1>`);
+    res.status(500).send(`<h1>Error fetching tabless: ${err.message}</h1>`);
   }
 });
 
 app.listen(PORT, () => {
   console.log(`🌐 Server running at http://localhost:${PORT}`);
 });
+

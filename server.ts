@@ -1,31 +1,26 @@
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 const express = require('express');
 
 const app = express();
 const PORT = 3001;
 
-const createConnection = mysql.createConnection({
+// ✅ Connection info
+const dbConfig = {
   host: 'localhost',
   user: 'root',
   password: '123Asd!@#',
   database: 'salesdb'
-});
+};
 
-createConnection.connect((err:any) => {
-  if (err) throw err;
-  console.log('✅ Connected to MySQL database');
-});
+app.get('/', async (req, res) => {
+  try {
+    // Create connection each time (serverless safe)
+    const connection = await mysql.createConnection(dbConfig);
 
-app.get('/', (req:any, res:any) => {
-  const query = 'SHOW TABLES';
+    const [results] = await connection.execute('SHOW TABLES');
+    await connection.end();
 
-  createConnection.query(query, (err:any, results:any) => {
-    if (err) {
-      return res.status(500).send(`<h1>Error fetching tables: ${err.message}</h1>`);
-    }
-
-    // Extract table names dynamically
-    const tableNames = results.map((row:any) => Object.values(row)[0]);
+    const tableNames = results.map(row => Object.values(row)[0]);
     const tableList = tableNames.length ? tableNames.join(', ') : 'No tables found';
 
     res.send(`
@@ -33,7 +28,9 @@ app.get('/', (req:any, res:any) => {
       <h2>Available Tables:</h2>
       <p>${tableList}</p>
     `);
-  });
+  } catch (err) {
+    res.status(500).send(`<h1>Error fetching tables: ${err.message}</h1>`);
+  }
 });
 
 app.listen(PORT, () => {

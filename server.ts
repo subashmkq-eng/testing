@@ -12,7 +12,7 @@ const dbConfig = {
   database: 'salesdb'
 };
 
-app.get('/', async (req, res) => {
+app.get('/', async (req:any, res:any) => {
   try {
     // Create connection each time (serverless safe)
     const connection = await mysql.createConnection(dbConfig);
@@ -20,7 +20,7 @@ app.get('/', async (req, res) => {
     const [results] = await connection.execute('SHOW TABLES');
     await connection.end();
 
-    const tableNames = results.map(row => Object.values(row)[0]);
+    const tableNames = results.map((row:any) => Object.values(row)[0]);
     const tableList = tableNames.length ? tableNames.join(', ') : 'No tables found';
 
     res.send(`
@@ -28,7 +28,7 @@ app.get('/', async (req, res) => {
       <h2>Available Tables:</h2>
       <p>${tableList}</p>
     `);
-  } catch (err) {
+  } catch (err:any) {
     res.status(500).send(`<h1>Error fetching tabless: ${err.message}</h1>`);
   }
 });
@@ -36,4 +36,3 @@ app.get('/', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`🌐 Server running at http://localhost:${PORT}`);
 });
-
